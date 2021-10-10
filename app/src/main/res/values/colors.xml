@@ -4,4 +4,13 @@
     <color name="colorPrimaryDark">#424242</color>
     <color name="colorAccent">#FF4081</color>
     <color name="white_t">#88ffffff</color>
+
+    <!-- Material Theme -->
+    <color name="color_primary">#4db6ac</color>
+    <color name="color_primary_variant">#00867d</color>
+    <color name="color_secondary">#546e7a</color>
+    <color name="color_secondary_variant">#29434e</color>
+
+    <color name="color_on_primary">#000000</color>
+    <color name="color_on_secondary">#ffffff</color>
 </resources>
