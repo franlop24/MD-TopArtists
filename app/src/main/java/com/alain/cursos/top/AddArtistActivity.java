@@ -20,16 +20,17 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -59,6 +60,12 @@ public class AddArtistActivity extends AppCompatActivity implements DatePickerDi
     TextInputEditText etNotas;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+    @BindView(R.id.tilNombre)
+    TextInputLayout tilNombre;
+    @BindView(R.id.tilEstatura)
+    TextInputLayout tilEstatura;
+    @BindView(R.id.tilApellidos)
+    TextInputLayout tilApellidos;
 
     private Artista mArtista;
     private Calendar mCalendar;
@@ -139,20 +146,26 @@ public class AddArtistActivity extends AppCompatActivity implements DatePickerDi
         boolean isValid = true;
 
         if (etEstatura.getText() != null && (etEstatura.getText().toString().trim().isEmpty() ||
-                Integer.valueOf(etEstatura.getText().toString().trim()) < getResources().getInteger(R.integer.estatura_min)) ) {
-            etEstatura.setError(getString(R.string.addArtist_error_estaturaMin));
-            etEstatura.requestFocus();
+                Integer.valueOf(etEstatura.getText().toString().trim()) < getResources().getInteger(R.integer.estatura_min))) {
+            tilEstatura.setError(getString(R.string.addArtist_error_estaturaMin));
+            tilEstatura.requestFocus();
             isValid = false;
+        } else {
+            tilEstatura.setError(null);
         }
         if (etApellidos.getText() != null && etApellidos.getText().toString().trim().isEmpty()) {
-            etApellidos.setError(getString(R.string.addArtist_error_required));
-            etApellidos.requestFocus();
+            tilApellidos.setError(getString(R.string.addArtist_error_required));
+            tilApellidos.requestFocus();
             isValid = false;
+        } else {
+            tilApellidos.setError(null);
         }
         if (etNombre.getText() != null && etNombre.getText().toString().trim().isEmpty()) {
-            etNombre.setError(getString(R.string.addArtist_error_required));
-            etNombre.requestFocus();
+            tilNombre.setError(getString(R.string.addArtist_error_required));
+            tilNombre.requestFocus();
             isValid = false;
+        } else {
+            tilNombre.setError(null);
         }
 
         return isValid;
@@ -161,7 +174,7 @@ public class AddArtistActivity extends AppCompatActivity implements DatePickerDi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK){
+        if (resultCode == RESULT_OK) {
             if (requestCode == RC_PHOTO_PICKER) {
                 configImageView(data.getDataString());
             }
@@ -200,7 +213,7 @@ public class AddArtistActivity extends AppCompatActivity implements DatePickerDi
                         .setMessage(String.format(Locale.ROOT,
                                 getString(R.string.detalle_dialogDelete_message),
                                 mArtista.getNombreCompleto()))
-                        .setPositiveButton(R.string.label_dialog_delete, (dialogInterface, i)-> configImageView(null))
+                        .setPositiveButton(R.string.label_dialog_delete, (dialogInterface, i) -> configImageView(null))
                         .setNegativeButton(R.string.label_dialog_cancel, null);
                 builder.show();
                 break;
@@ -222,7 +235,7 @@ public class AddArtistActivity extends AppCompatActivity implements DatePickerDi
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(R.string.addArtist_dialogUrl_title)
-                .setPositiveButton(R.string.label_dialog_add, (dialogInterface, i)->
+                .setPositiveButton(R.string.label_dialog_add, (dialogInterface, i) ->
                         configImageView(etFotoUrl.getText().toString().trim()))
                 .setNegativeButton(R.string.label_dialog_cancel, null);
         builder.setView(etFotoUrl);
@@ -230,10 +243,10 @@ public class AddArtistActivity extends AppCompatActivity implements DatePickerDi
     }
 
     private void configImageView(String fotoUrl) {
-        if (fotoUrl != null){
+        if (fotoUrl != null) {
             RequestOptions options = new RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .centerCrop();
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .centerCrop();
 
             Glide.with(this)
                     .load(fotoUrl)
