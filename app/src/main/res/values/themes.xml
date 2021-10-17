@@ -21,6 +21,8 @@
 
         <!-- Shape  -->
         <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.MaterialComponents.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.MaterialComponents.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.MaterialComponents.LargeComponent</item>
     </style>
     <style name="Base.MaterialThemeBuilder" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:statusBarColor">?colorPrimaryVariant</item>
