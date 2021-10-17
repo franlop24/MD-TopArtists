@@ -20,6 +20,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -56,6 +57,8 @@ public class AddArtistActivity extends AppCompatActivity implements DatePickerDi
     TextInputEditText etLugarNacimiento;
     @BindView(R.id.etNotas)
     TextInputEditText etNotas;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     private Artista mArtista;
     private Calendar mCalendar;
@@ -72,6 +75,7 @@ public class AddArtistActivity extends AppCompatActivity implements DatePickerDi
     }
 
     private void configActionBar() {
+        setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
