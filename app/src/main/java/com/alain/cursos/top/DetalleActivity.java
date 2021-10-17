@@ -35,6 +35,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.text.SimpleDateFormat;
@@ -77,6 +78,12 @@ public class DetalleActivity extends AppCompatActivity implements DatePickerDial
     NestedScrollView containerMain;
     @BindView(R.id.fab)
     FloatingActionButton fab;
+    @BindView(R.id.tilNombre)
+    TextInputLayout tilNombre;
+    @BindView(R.id.tilApellidos)
+    TextInputLayout tilApellidos;
+    @BindView(R.id.tilEstatura)
+    TextInputLayout tilEstatura;
 
     private Artista mArtista;
     private Calendar mCalendar;
@@ -141,8 +148,8 @@ public class DetalleActivity extends AppCompatActivity implements DatePickerDial
     private void configImageView(String fotoUrl) {
         if (fotoUrl != null) {
             RequestOptions options = new RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .centerCrop();
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .centerCrop();
 
             Glide.with(this)
                     .load(fotoUrl)
@@ -178,7 +185,7 @@ public class DetalleActivity extends AppCompatActivity implements DatePickerDial
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK){
+        if (resultCode == RESULT_OK) {
             if (requestCode == RC_PHOTO_PICKER) {
                 savePhotoUrlArtist(data.getDataString());
             }
@@ -214,6 +221,9 @@ public class DetalleActivity extends AppCompatActivity implements DatePickerDial
                     configTitle();
                     showMessage(R.string.detalle_message_update_success);
                     Log.i("DBFlow", "Inserción correcta de datos.");
+                    fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_account_edit));
+                    enableUIElements(false);
+                    mIsEdit = false;
                 } catch (Exception e) {
                     e.printStackTrace();
                     showMessage(R.string.detalle_message_update_fail);
@@ -221,9 +231,7 @@ public class DetalleActivity extends AppCompatActivity implements DatePickerDial
                 }
             }
 
-            fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_account_edit));
-            enableUIElements(false);
-            mIsEdit = false;
+
         } else {
             mIsEdit = true;
             fab.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_account_check));
@@ -235,20 +243,26 @@ public class DetalleActivity extends AppCompatActivity implements DatePickerDial
         boolean isValid = true;
 
         if (etEstatura.getText() != null && (etEstatura.getText().toString().trim().isEmpty() ||
-                Integer.valueOf(etEstatura.getText().toString().trim()) < getResources().getInteger(R.integer.estatura_min)) ) {
-            etEstatura.setError(getString(R.string.addArtist_error_estaturaMin));
-            etEstatura.requestFocus();
+                Integer.valueOf(etEstatura.getText().toString().trim()) < getResources().getInteger(R.integer.estatura_min))) {
+            tilEstatura.setError(getString(R.string.addArtist_error_estaturaMin));
+            tilEstatura.requestFocus();
             isValid = false;
+        } else {
+            tilEstatura.setError(null);
         }
         if (etApellidos.getText() != null && etApellidos.getText().toString().trim().isEmpty()) {
-            etApellidos.setError(getString(R.string.addArtist_error_required));
-            etApellidos.requestFocus();
+            tilApellidos.setError(getString(R.string.addArtist_error_required));
+            tilApellidos.requestFocus();
             isValid = false;
+        } else {
+            tilApellidos.setError(null);
         }
         if (etNombre.getText() != null && etNombre.getText().toString().trim().isEmpty()) {
-            etNombre.setError(getString(R.string.addArtist_error_required));
-            etNombre.requestFocus();
+            tilNombre.setError(getString(R.string.addArtist_error_required));
+            tilNombre.requestFocus();
             isValid = false;
+        } else {
+            tilNombre.setError(null);
         }
 
         return isValid;
@@ -305,7 +319,7 @@ public class DetalleActivity extends AppCompatActivity implements DatePickerDial
                         .setMessage(String.format(Locale.ROOT,
                                 getString(R.string.detalle_dialogDelete_message),
                                 mArtista.getNombreCompleto()))
-                        .setPositiveButton(R.string.label_dialog_delete, (dialogInterface, i)->
+                        .setPositiveButton(R.string.label_dialog_delete, (dialogInterface, i) ->
                                 savePhotoUrlArtist(null))
                         .setNegativeButton(R.string.label_dialog_cancel, null);
                 builder.show();
@@ -328,8 +342,8 @@ public class DetalleActivity extends AppCompatActivity implements DatePickerDial
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(R.string.addArtist_dialogUrl_title)
-                .setPositiveButton(R.string.label_dialog_add, (dialogInterface, i)->
-                    savePhotoUrlArtist(etFotoUrl.getText().toString().trim()))
+                .setPositiveButton(R.string.label_dialog_add, (dialogInterface, i) ->
+                        savePhotoUrlArtist(etFotoUrl.getText().toString().trim()))
                 .setNegativeButton(R.string.label_dialog_cancel, null);
         builder.setView(etFotoUrl);
         builder.show();
